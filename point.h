@@ -30,6 +30,7 @@ struct Point
     Point() = default;
     Point(const QStringList &);
 //    Point(Point &&);
+
 };
 
 #endif // POINT_H

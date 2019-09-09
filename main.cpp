@@ -10,7 +10,8 @@ int main()
     std::cout << "Starting conversion..." << std::endl;
     Timer::startTimer();
     fileWork.readAllFiles();
-    fileWork.writeAllFiles();
+    fileWork.writeNyquistFiles();
+    fileWork.writeCVFile();
     std::cout << "Finished" << std::endl;
     std::cout << "This software was created by Evgeny Bondarenko (Minsk, 2019)" << std::endl;
     system("pause");

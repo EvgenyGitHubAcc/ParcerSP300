@@ -18,7 +18,8 @@ private:
 public:
     File();
     void readAllFiles();
-    void writeAllFiles();
+    void writeNyquistFiles();
+    void writeCVFile();
 };
 
 #endif // FILE_H

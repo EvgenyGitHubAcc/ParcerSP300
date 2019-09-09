@@ -3,37 +3,45 @@
 
 File::File()
 {
-    QDir fileInputPath = QDir(QString("%1/%2").arg(QDir::currentPath()).arg("Src"));
+    QDir fileInputPath = QDir(QString("%1/%2").arg(QDir::currentPath()).arg("Initial Files"));
     QStringList nameFilter("*.mpt");
     srcFiles = fileInputPath.entryList(nameFilter);
 }
 
 void File::readAllFiles()
 {
-    foreach(const QString el, srcFiles)
+    if(!srcFiles.size())
     {
-        QString srcFile = QString("%1/%2/%3").arg(QDir::currentPath()).arg("Src").arg(el);
+        std::cout << "There are no files to analyse" << std::endl;
+        return;
+    }
+    foreach(QString el, srcFiles)
+    {
+        QString srcFile = QString("%1/%2/%3").arg(QDir::currentPath()).arg("Initial files").arg(el);
         QFile file(srcFile);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         {
             return;
         }
-
         fileLines = QString(file.readAll()).split('\n');
         purifyFile();
         Container::fillList(fileLines);
         fileLines.clear();
         std::cout << QString("File %1 is loaded. %2 msec").arg(el).arg(Timer::writeTime()).toStdString() << std::endl;
     }
+    Container::setSpecInFile(Container::getSpecta().size() / srcFiles.size());
 }
 
-void File::writeAllFiles()
+void File::writeNyquistFiles()
 {
-
+    if(!srcFiles.size())
+    {
+        return;
+    }
     for(int i = 0; i < srcFiles.count(); ++i)
     {
         srcFiles[i].truncate(srcFiles[i].lastIndexOf('.'));
-        QString path = QString("%1/%2/%3").arg(QDir::currentPath()).arg("Fin").arg(srcFiles[i]);
+        QString path = QString("%1/%2/%3").arg(QDir::currentPath()).arg("Final files").arg(srcFiles[i]);
         QDir dir(path);
 
         if (!dir.exists())
@@ -52,11 +60,32 @@ void File::writeAllFiles()
                 return;
             }
             QTextStream out(&file);
-            int k = Container::getSpecta().size();
             out << Container::getSpecta()[j];
             file.close();
         }
-        std::cout << QString("File %1 is ready. %2 msec").arg(srcFiles[i]).arg(Timer::writeTime()).toStdString() << std::endl;
+        std::cout << QString("Folder %1 is ready. %2 msec").arg(srcFiles[i]).arg(Timer::writeTime()).toStdString() << std::endl;
+    }
+}
+
+void File::writeCVFile()
+{
+    if(!srcFiles.size())
+    {
+        return;
+    }
+    for(int i = 0; i < srcFiles.count(); ++i)
+    {
+        QString path = QString("%1/%2/%3").arg(QDir::currentPath()).arg("Final files").arg(srcFiles[i]);
+        QString finFile = QString(path + "/%1-CV.txt").arg(srcFiles[i]);
+        QFile file(finFile);
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
+            return;
+        }
+        QTextStream out(&file);
+        out << Container::createMottShottky();
+        file.close();
+        std::cout << QString("File %1-CV.txt is ready. %2 msec").arg(srcFiles[i]).arg(Timer::writeTime()).toStdString() << std::endl;
     }
 }
 
