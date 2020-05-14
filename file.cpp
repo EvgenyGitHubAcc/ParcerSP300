@@ -52,8 +52,8 @@ void File::writeNyquistFiles()
         for(int j = 1; j < Container::getSpecta().size(); ++j)
         {
             QString name = Container::getSpecta()[j].getPot();
-            name.remove(4, name.size() - 5);
-            QString finFile = QString(path + "/%1-%2.txt").arg(srcFiles[i]).arg(name);
+            name.truncate(8);
+            QString finFile = QString(path + "/%1[%2].txt").arg(srcFiles[i]).arg(name);
             QFile file(finFile);
             if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
             {
