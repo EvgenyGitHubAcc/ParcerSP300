@@ -8,8 +8,6 @@ class Spectrum
 {
 private:
     QList<Point> points;
-    double getAverCur();
-    double getAverC_2();
 public:
     Spectrum();
     Spectrum(const Spectrum &);
@@ -18,7 +16,6 @@ public:
     void clear();
     QList<Point> getPoints() const;
     const QString & getPot();
-    const QString getMottShottkyLine();
 };
 
 QTextStream & operator<<(QTextStream &, const Spectrum &);

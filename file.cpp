@@ -15,7 +15,7 @@ void File::readAllFiles()
         std::cout << "There are no files to analyse" << std::endl;
         return;
     }
-    foreach(QString el, srcFiles)
+    for(QString & el : srcFiles)
     {
         QString srcFile = QString("%1/%2/%3").arg(QDir::currentPath()).arg("Initial files").arg(el);
         QFile file(srcFile);
@@ -25,7 +25,8 @@ void File::readAllFiles()
         }
         fileLines = QString(file.readAll()).split('\n');
         purifyFile();
-        Container::fillList(fileLines);
+        el.truncate(el.lastIndexOf('.'));
+        Container::fillList(fileLines, el);
         fileLines.clear();
         std::cout << QString("File %1 is loaded. %2 msec").arg(el).arg(Timer::writeTime()).toStdString() << std::endl;
     }
@@ -38,32 +39,29 @@ void File::writeNyquistFiles()
     {
         return;
     }
-    for(int i = 0; i < srcFiles.count(); ++i)
+    foreach(QString el, srcFiles)
     {
-        srcFiles[i].truncate(srcFiles[i].lastIndexOf('.'));
-        QString path = QString("%1/%2/%3").arg(QDir::currentPath()).arg("Final files").arg(srcFiles[i]);
+        QString path = QString("%1/%2/%3").arg(QDir::currentPath()).arg("Final files").arg(el);
         QDir dir(path);
 
         if (!dir.exists())
         {
           dir.mkdir(path);
         }
-        int b = Container::getSpecta().size();
-        QList<Spectrum> spectra = Container::getSpecta();
-        for(int j = 1; j < b; ++j)
+        for(int j = 0; j < Container::getSpecta()[el].count(); ++j)                             //Specta count in the top of spectra file
         {
-            QString name = Container::getSpecta()[j].getPot();
-            QString finFile = QString(path + "/%1[%2].txt").arg(srcFiles[i]).arg(name.toDouble(), 0, 'f', 5);
+            QString name = Container::getSpecta()[el][j].getPot();
+            QString finFile = QString(path + "/%1[%2].txt").arg(el).arg(name.toDouble(), 0, 'f', 5);
             QFile file(finFile);
             if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
             {
                 return;
             }
             QTextStream out(&file);
-            out << Container::getSpecta()[j];
+            out << Container::getSpecta()[el][j];
             file.close();
         }
-        std::cout << QString("Folder %1 is ready. %2 msec").arg(srcFiles[i]).arg(Timer::writeTime()).toStdString() << std::endl;
+        std::cout << QString("Folder %1 is ready. %2 msec").arg(el).arg(Timer::writeTime()).toStdString() << std::endl;
     }
 }
 
@@ -83,9 +81,8 @@ void File::writeCVFile()
             return;
         }
         QTextStream out(&file);
-        out << Container::createMottShottky();
         file.close();
-        std::cout << QString("File %1-CV.txt is ready. %2 msec").arg(srcFiles[i]).arg(Timer::writeTime()).toStdString() << std::endl;
+        std::cout << QString("File %1-CV is ready. %2 msec").arg(srcFiles[i]).arg(Timer::writeTime()).toStdString() << std::endl;
     }
 }
 
