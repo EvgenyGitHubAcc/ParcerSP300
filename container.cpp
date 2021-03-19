@@ -2,27 +2,21 @@
 
 QMap<QString, QList<Spectrum>> Container::specta;
 
-int Container::specInFile = 0;
-
 QMap<QString, QList<Spectrum>> Container::getSpecta()
 {
     return specta;
 }
 
-//QString Container::createMottShottky()
-//{
-//    QString lines = {};
-//    for(int i = 0; i < specInFile; ++i)
-//    {
-//        lines += specta[i].getMottShottkyLine();
-//        specta[i].getPoints().pop_front();
-//    }
-//    return lines;
-//}
-
-void Container::setSpecInFile(int value)
+QString Container::createMottShottky(const QString & fileStr)
 {
-    specInFile = value;
+    QString lines = {};
+    QList<Spectrum> specList = specta[fileStr];
+    for(int i = 0; i < specList.count(); ++i)
+    {
+        lines += specList[i].getMottShottkyLine();
+        specList[i].getPoints().pop_front();
+    }
+    return lines;
 }
 
 Container::Container()
@@ -38,7 +32,6 @@ void Container::fillList(const QStringList & list, const QString & srcFile)
     foreach(const QString & str, list)
     {
         QStringList rawList(str.split('\t'));
-        int a = (int)std::stod(rawList[12].toStdString());
         if(str == list.last())
         {
             spec << Point(std::move(rawList));

@@ -30,7 +30,6 @@ void File::readAllFiles()
         fileLines.clear();
         std::cout << QString("File %1 is loaded. %2 msec").arg(el).arg(Timer::writeTime()).toStdString() << std::endl;
     }
-    Container::setSpecInFile(Container::getSpecta().size() / srcFiles.size());
 }
 
 void File::writeNyquistFiles()
@@ -81,6 +80,7 @@ void File::writeCVFile()
             return;
         }
         QTextStream out(&file);
+        out << Container::createMottShottky(srcFiles[i]);
         file.close();
         std::cout << QString("File %1-CV is ready. %2 msec").arg(srcFiles[i]).arg(Timer::writeTime()).toStdString() << std::endl;
     }

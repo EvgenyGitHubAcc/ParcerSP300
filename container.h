@@ -11,12 +11,11 @@ class Container
 {
 private:
     static QMap<QString, QList<Spectrum>> specta;
-    static int specInFile;
     Container();
 public:
     static void fillList(const QStringList &, const QString &);
     static QMap<QString, QList<Spectrum>> getSpecta();
-    static QString createMottShottky();
+    static QString createMottShottky(const QString &);
     static void setSpecInFile(int value);
 };
 
