@@ -38,17 +38,19 @@ void Container::fillList(const QStringList & list)
     foreach(const QString & str, list)
     {
         QStringList rawList(str.split('\t'));
+        int a = (int)std::stod(rawList[12].toStdString());
         if(str == list.last())
         {
             spec << Point(std::move(rawList));
             specta.append(std::move(spec));
             return;
         }
-        if(rawList[0] == "0" || rawList[1] == "0" || rawList[2] == "0")
+//        if(rawList[0] == "0.0000000E+000" || rawList[1] == "0.0000000E+000" || rawList[2] == "0.0000000E+000")
+        if((int)rawList[0].toDouble() == 0 || (int)rawList[1].toDouble() == 0 || (int)rawList[2].toDouble() == 0)
         {
             continue;
         }
-        else if(rawList[12].toInt() == specNum)
+        else if((int)std::stod(rawList[12].toStdString()) == specNum)
         {
             spec << Point(std::move(rawList));
         }

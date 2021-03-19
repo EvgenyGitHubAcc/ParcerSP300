@@ -48,12 +48,12 @@ void File::writeNyquistFiles()
         {
           dir.mkdir(path);
         }
-
-        for(int j = 1; j < Container::getSpecta().size(); ++j)
+        int b = Container::getSpecta().size();
+        QList<Spectrum> spectra = Container::getSpecta();
+        for(int j = 1; j < b; ++j)
         {
             QString name = Container::getSpecta()[j].getPot();
-            name.truncate(8);
-            QString finFile = QString(path + "/%1[%2].txt").arg(srcFiles[i]).arg(name);
+            QString finFile = QString(path + "/%1[%2].txt").arg(srcFiles[i]).arg(name.toDouble(), 0, 'f', 5);
             QFile file(finFile);
             if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
             {
