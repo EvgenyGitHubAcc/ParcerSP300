@@ -50,7 +50,7 @@ void File::writeNyquistFiles()
         for(int j = 0; j < Container::getSpecta()[el].count(); ++j)                             //Specta count in the top of spectra file
         {
             QString name = Container::getSpecta()[el][j].getPot();
-            QString finFile = QString(path + "/%1[%2].txt").arg(el).arg(name.toDouble(), 0, 'f', 5);
+            QString finFile = QString(path + "/%1-%2[%3].txt").arg(j + 1).arg(el).arg(name.toDouble(), 0, 'f', 5);
             QFile file(finFile);
             if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
             {
