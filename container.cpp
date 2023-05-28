@@ -39,7 +39,7 @@ void Container::fillList(const QStringList & list, const QString & srcFile)
             specta.insert(srcFile, std::move(localSpecList));
             return;
         }
-        if(rawList[0].toDouble() == 0.0000000E+000 || rawList[1].toDouble() == 0.0000000E+000 || rawList[2].toDouble() == 0.0000000E+000)
+        if(((int)rawList[0].toDouble() == 0) && ((int)rawList[1].toDouble() == 0) && ((int)rawList[2].toDouble() == 0))
         {
             continue;
         }
